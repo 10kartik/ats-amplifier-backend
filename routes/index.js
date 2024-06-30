@@ -5,7 +5,7 @@ const multer = require("multer");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/");
+    cb(null, "/tmp/");
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname);
@@ -18,7 +18,11 @@ router.post("/", upload.single("pdf"), async (req, res) => {
     return res.status(400).json({ error: "No file uploaded" });
   }
   console.log(req.file);
-  return res.send("Single file");
+  const pdf_info = {
+    name: req.file.originalname,
+    size: req.file.size,
+  };
+  return res.send(pdf_info);
 });
 
 module.exports = router;
