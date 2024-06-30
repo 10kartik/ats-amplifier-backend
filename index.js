@@ -2,7 +2,6 @@ const serverless = require("serverless-http");
 const express = require("express"),
   createNamespace = require("continuation-local-storage").createNamespace,
   morgan = require("morgan"),
-  bodyParser = require("body-parser"),
   helmet = require("helmet"),
   winston = require("winston"),
   cors = require("cors");
@@ -193,17 +192,15 @@ app.use(function (req, res, next) {
 // Helmet helps secure Express apps by setting various HTTP headers.
 app.use(helmet());
 
-// Node.js body parsing middleware. Default limit is 100kb
-app.use(bodyParser.json({ limit: "2mb" }));
-
-// Parsing the URL-encoded data with the qs library (extended: true). Default limit is 100kb
-app.use(bodyParser.urlencoded({ extended: true, limit: "2mb" }));
-
 // Start Request logging. Placed below static and health check to reduce logs.
 app.use(appendRequestDebugInfo, startRequestLogLine);
 
 // Set response headers.
 app.use(setResponseHeader);
+
+app.use(express.json());
+
+app.use(express.urlencoded({ extended: true }));
 
 /**
  * NOTE: For API routes: first sanitize and then assign params.
