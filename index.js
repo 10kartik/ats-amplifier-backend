@@ -164,7 +164,11 @@ app.use(
       "http://localhost:3000",
       "http://localhost:3001",
       /ats-amplifier-frontend-.*\.vercel\.app$/,
+      /.*\.vercel\.app$/,
       "ats-amplifier-frontend.vercel.app",
+      "kk10-ats.vercel.app",
+      "ats-amplifier.vercel.app",
+      "ats-booster.vercel.app",
     ],
     credentials: true,
   })
