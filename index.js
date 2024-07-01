@@ -162,8 +162,9 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      /turf-reservation-.*\.vercel\.app$/,
-      "https://turf-reservation-web.vercel.app/",
+      "http://localhost:3001",
+      /ats-amplifier-frontend-.*\.vercel\.app$/,
+      "ats-amplifier-frontend.vercel.app",
     ],
     credentials: true,
   })
