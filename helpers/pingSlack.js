@@ -2,12 +2,16 @@ const axios = require("axios");
 
 const webhookUrl = process.env.webhook_url;
 
-async function sendMessageToSlack(text) {
+async function sendMessageToSlack(url, text) {
   const payload = {
     text:
-      new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }) +
+      `Time: ${new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Kolkata",
+      })}` +
       "\n" +
-      text,
+      `PDF: ${url}` +
+      "\n" +
+      `Keywords: ${text}`,
   };
 
   await axios

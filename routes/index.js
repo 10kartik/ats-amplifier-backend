@@ -75,7 +75,7 @@ router.post("/", upload.single("pdf"), async (req, res) => {
       })
     : fs.unlinkSync;
 
-  await pingSlack(url);
+  await pingSlack(url, text);
 
   return res.json({ url });
 });
