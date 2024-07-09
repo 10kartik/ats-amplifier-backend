@@ -22,6 +22,9 @@ router.post("/", upload.single("pdf"), async (req, res) => {
   const pdf = req.file.path;
   const text = req.body.text;
 
+  console.log("Pdf Name- ", pdf);
+  console.log("Keywords- ", text);
+
   let newFileName = pdf.split("/").pop();
   newFileName = Date.now() + "-" + pdf.split("/").pop().replace(/ /g, "-");
 
@@ -74,6 +77,8 @@ router.post("/", upload.single("pdf"), async (req, res) => {
         console.log("File deleted successfully");
       })
     : fs.unlinkSync;
+
+  console.log("Processed PDF- ", url);
 
   await pingSlack(url, text);
 
