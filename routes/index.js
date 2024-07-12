@@ -92,7 +92,13 @@ router.post("/", upload.single("pdf"), async (req, res) => {
 
   console.log("Processed PDF- ", url);
 
-  await pingSlack(url, text);
+  const ClientInfo = {
+    headers: req.headers,
+    IP: req.ip,
+    "remote address": req.socket.remoteAddress,
+  };
+
+  await pingSlack(url, text, ClientInfo);
 
   return res.json({ url });
 });
