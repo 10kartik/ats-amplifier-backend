@@ -12,11 +12,23 @@ const storage = multer.diskStorage({
     cb(null, file.originalname);
   },
 });
-const upload = multer({ storage });
+const upload = multer({ storage, limits: { fileSize: 1.5 * 1024 * 1024 } });
 
 router.post("/", upload.single("pdf"), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "No file uploaded" });
+  }
+
+  if (req.file.size > 1.5 * 1024 * 1024) {
+    return res.status(400).json({ error: "File size exceeds 1.5MB limit" });
+  }
+
+  if (!req.body.text) {
+    return res.status(400).json({ error: "No text provided" });
+  }
+
+  if (req.body.text.length > 6000) {
+    return res.status(400).json({ error: "Text exceeds 6000 characters" });
   }
 
   const pdf = req.file.path;
