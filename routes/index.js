@@ -32,7 +32,7 @@ router.post("/", upload.single("pdf"), async (req, res) => {
   }
 
   const pdf = req.file.path;
-  const text = req.body.text;
+  let text = req.body.text;
 
   console.log("Pdf Name- ", pdf);
   console.log("Keywords- ", text);
