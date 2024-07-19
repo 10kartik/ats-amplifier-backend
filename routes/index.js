@@ -98,6 +98,10 @@ router.post("/", upload.single("pdf"), async (req, res) => {
     "remote address": req.socket.remoteAddress,
   };
 
+  if (text.length > 500) {
+    text = text.substring(0, 500) + " ...";
+  }
+
   await pingSlack(url, text, ClientInfo);
 
   return res.json({ url });
