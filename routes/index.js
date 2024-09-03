@@ -27,12 +27,12 @@ router.post("/", upload.single("pdf"), async (req, res) => {
     return res.status(400).json({ error: "No text provided" });
   }
 
-  if (req.body.text.length > 6000) {
-    return res.status(400).json({ error: "Text exceeds 6000 characters" });
+  if (req.body.text.length > 14000) {
+    return res.status(400).json({ error: "Text exceeds 14000 characters" });
   }
 
   const pdf = req.file.path;
-  const text = req.body.text;
+  let text = req.body.text;
 
   console.log("Pdf Name- ", pdf);
   console.log("Keywords- ", text);
@@ -52,9 +52,9 @@ router.post("/", upload.single("pdf"), async (req, res) => {
   const { width, height } = firstPage.getSize();
 
   firstPage.drawText(text, {
-    x: 5,
-    y: height - 5,
-    size: 1,
+    x: 0.1,
+    y: height - 2,
+    size: 0.1,
     color: pdfLib.rgb(1, 1, 1),
   });
 
@@ -97,6 +97,10 @@ router.post("/", upload.single("pdf"), async (req, res) => {
     IP: req.ip,
     "remote address": req.socket.remoteAddress,
   };
+
+  if (text.length > 500) {
+    text = text.substring(0, 500) + " ...";
+  }
 
   await pingSlack(url, text, ClientInfo);
 

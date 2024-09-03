@@ -12,9 +12,9 @@ async function sendMessageToSlack(url, text, ClientInfo) {
       `PDF: ${url}` +
       "\n" +
       `Keywords: ${text}` +
-      "\n\n```" +
+      "\n\n``` " +
       `Client Info: ${JSON.stringify(ClientInfo)}` +
-      "```",
+      " ```",
   };
 
   await axios
