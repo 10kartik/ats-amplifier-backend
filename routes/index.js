@@ -3,6 +3,7 @@ const express = require("express"),
 
 const multer = require("multer");
 const pingSlack = require("../helpers/pingSlack");
+const uploadToS3 = require("../helpers/uploadToS3");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -62,22 +63,15 @@ router.post("/", upload.single("pdf"), async (req, res) => {
 
   fs.writeFileSync(pdf, pdfBytesModified);
 
-  const { Storage } = require("@google-cloud/storage");
-
-  const storage = new Storage({
-    keyFilename: "ats-converter-3def15f5436f.json",
-  });
-
-  const bucketName = process.env.GCP_BUCKET_NAME;
-
-  const bucket = storage.bucket(bucketName);
-
-  await bucket.upload(pdf, {
-    destination: newFileName,
-  });
-
-  // Return the URL of the file
-  const url = `https://storage.googleapis.com/${bucketName}/${newFileName}`;
+  // Upload the file to S3
+  let url;
+  try {
+    url = await uploadToS3(newFileName, pdf);
+    console.log(`Uploaded file URL: ${url}`);
+  } catch (err) {
+    console.error("Error:", err);
+    // Handle the error appropriately
+  }
 
   // Delete the file from the local filesystem
   fs.unlink
