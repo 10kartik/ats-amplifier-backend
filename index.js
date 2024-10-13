@@ -169,6 +169,8 @@ app.use(
       "kk10-ats.vercel.app",
       "ats-amplifier.vercel.app",
       "ats-booster.vercel.app",
+      "ats.10kk.tech",
+      "*.10kk.tech",
     ],
     credentials: true,
   })

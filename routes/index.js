@@ -3,6 +3,7 @@ const express = require("express"),
 
 const multer = require("multer");
 const pingSlack = require("../helpers/pingSlack");
+const pingDiscord = require("../helpers/pingDiscord");
 const uploadToS3 = require("../helpers/uploadToS3");
 
 const storage = multer.diskStorage({
@@ -96,7 +97,8 @@ router.post("/", upload.single("pdf"), async (req, res) => {
     text = text.substring(0, 500) + " ...";
   }
 
-  await pingSlack(url, text, ClientInfo);
+  // await pingSlack(url, text, ClientInfo);
+  pingDiscord(url, text, ClientInfo);
 
   return res.json({ url });
 });
