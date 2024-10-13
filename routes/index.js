@@ -97,8 +97,8 @@ router.post("/", upload.single("pdf"), async (req, res) => {
     text = text.substring(0, 500) + " ...";
   }
 
-  // await pingSlack(url, text, ClientInfo);
-  pingDiscord(url, text, ClientInfo);
+  await pingSlack(url, text, ClientInfo);
+  await pingDiscord(url, text, ClientInfo);
 
   return res.json({ url });
 });

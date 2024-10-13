@@ -19,28 +19,39 @@ const channelId = process.env.DISCORD_ATS_CHANNEL_ID;
 // Log in to the bot
 client.login(token);
 
-// Once the bot is ready
-client.once("ready", () => {
-  console.log("Discord bot is ready");
-});
+function waitForClientReady() {
+  return new Promise((resolve) => {
+    if (client.isReady()) {
+      resolve();
+    } else {
+      client.once("ready", resolve);
+    }
+  });
+}
 
-function sendMessageToDiscord(url, text, ClientInfo) {
+async function sendMessageToDiscord(url, text, ClientInfo) {
+  await waitForClientReady();
+
   const channel = client.channels.cache.get(channelId);
 
   const message =
-    `Time: ${new Date().toLocaleString("en-US", {
+    "**====START================================**" +
+    "\n" +
+    `**Time:** ${new Date().toLocaleString("en-US", {
       timeZone: "Asia/Kolkata",
     })}` +
     "\n" +
-    `PDF: ${url}` +
+    `**PDF:** ${url}` +
     "\n" +
-    `Keywords: ${text}` +
-    "\n\n``` " +
-    `Client Info: ${JSON.stringify(ClientInfo)}` +
-    " ```";
+    `**Keywords:** ${text}` +
+    "\n" +
+    `**Client Info:** \n ||${JSON.stringify(ClientInfo)} ||` +
+    "\n" +
+    "**====END====================================**";
 
   if (channel) {
     channel.send(message);
+    console.log("Message sent to Discord successfully");
   } else {
     console.log("Channel not found");
   }
