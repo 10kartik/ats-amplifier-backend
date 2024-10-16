@@ -1,6 +1,5 @@
 const serverless = require("serverless-http");
 const express = require("express"),
-  createNamespace = require("continuation-local-storage").createNamespace,
   morgan = require("morgan"),
   helmet = require("helmet"),
   winston = require("winston"),
@@ -12,7 +11,6 @@ const rootPrefix = ".";
 const basicHelper = require(rootPrefix + "/helpers/basic"),
   customMiddleware = require(rootPrefix + "/helpers/customMiddleware");
 
-const requestSharedNameSpace = createNamespace("turfBookingApiNamespace");
 const apiRoutes = require(rootPrefix + "/routes/index");
 
 const logger = winston.createLogger({
@@ -114,22 +112,6 @@ const assignParams = function (req, res, next) {
 };
 
 /**
- * Set request debugging/logging details to shared namespace.
- * @param {object} req
- * @param {object} res
- * @param {object} next
- *
- * @returns {Promise<void>}
- */
-const appendRequestDebugInfo = function (req, res, next) {
-  requestSharedNameSpace.run(function () {
-    requestSharedNameSpace.set("reqId", req.id);
-    requestSharedNameSpace.set("startTime", req.startTime);
-    next();
-  });
-};
-
-/**
  * Set response headers
  *
  * @param {object} req
@@ -163,12 +145,12 @@ app.use(
     origin: [
       "http://localhost:3000",
       "http://localhost:3001",
-      /ats-amplifier-frontend-.*\.vercel\.app$/,
-      /.*\.vercel\.app$/,
       "ats-amplifier-frontend.vercel.app",
       "kk10-ats.vercel.app",
-      "ats-amplifier.vercel.app",
+      "https://*.vercel.app",
+      "https://ats-amplifier.vercel.app",
       "ats-booster.vercel.app",
+      "https://ats.10kk.tech",
     ],
     credentials: true,
   })
@@ -198,7 +180,7 @@ app.use(function (req, res, next) {
 app.use(helmet());
 
 // Start Request logging. Placed below static and health check to reduce logs.
-app.use(appendRequestDebugInfo, startRequestLogLine);
+app.use(startRequestLogLine);
 
 // Set response headers.
 app.use(setResponseHeader);
